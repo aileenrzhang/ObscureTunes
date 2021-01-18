@@ -1,0 +1,25 @@
+body {
+    background-color: #1b1414;
+    color: white;
+    white-space: pre-line;
+}
+
+h1 {
+    color: white;
+}
+
+.loginbtn {
+    position: relative;
+    display: block;
+    width: 20%;
+    margin: auto;
+    margin-top: 20px;
+}
+
+.logo {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 200px;
+    max-width: 200px;
+    position: relative;
+}
