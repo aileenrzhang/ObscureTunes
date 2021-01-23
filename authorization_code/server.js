@@ -15,9 +15,9 @@ var cookieParser = require('cookie-parser');
 const { json } = require('body-parser');
 const { response } = require('express');
 
-var client_id = '2ba45575c2c74ffdae80355e6b83aba2'; // Your client id
-var client_secret = '0a76f68d157548c6a63a2f370441844c'; // Your secret
-var redirect_uri = "http://obscuretunes.herokuapp.com/callback/"; // Your redirect uri
+var client_id; // Your client id
+var client_secret ; // Your secret
+var redirect_uri = "http://localhost:8888/callback/"; // Your redirect uri
 
 /**
  * Generates a random string containing numbers and letters
@@ -163,5 +163,4 @@ app.get('/get_obscure_tunes', function(req, res) {
 
 
 app.listen(process.env.PORT || 8888, function () {
-	console.log('Server is running on port 8888');
 });
