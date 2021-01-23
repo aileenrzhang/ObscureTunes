@@ -2,24 +2,125 @@ body {
     background-color: #1b1414;
     color: white;
     white-space: pre-line;
+    font-family: 'Roboto Mono', monospace;
+    padding: 0;
+    margin: 0;
 }
 
 h1 {
     color: white;
 }
 
+#login {
+    position: absolute;
+    width: 100%;
+}
+
+#loggedin {
+    position: absolute;
+    margin: auto;
+    width: 100%;
+}
+
 .loginbtn {
     position: relative;
     display: block;
-    width: 20%;
     margin: auto;
-    margin-top: 20px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    background-color: #1b1414;
+    border-color: #1DB954;
+    height: auto;
+    width: 30%;
+}
+
+.logintxt {
+    position: relative;
+}
+
+.loginbtn:hover {
+    background-color: #1DB954;
+}
+
+.loginbtn:focus {
+    background-color: #1DB954;
+}
+
+
+.loginbtn:active {
+    background-color: #169141;
 }
 
 .logo {
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 200px;
+    margin: auto;
     max-width: 200px;
     position: relative;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    width: 70%;
+    margin: auto;
+}
+
+.time-btn {
+    margin-left: 50px;
+    margin-right: 50px;
+    height: auto;
+}
+
+.time-btn:active {
+    background-color: #1DB954;
+}
+
+.footer {
+    font-size: 12px;
+    text-align: center;
+}
+
+canvas {
+    display: block;
+    vertical-align: bottom;
+}
+
+/* ---- particles.js container ---- */
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #1b1414;
+    background-image: url("");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+    float: initial;
+}
+
+a {
+    color: #1DB954;
+}
+
+a:hover {
+    color: #1DB954;
+}
+
+a:focus {
+    color: #1DB954;
+}
+
+a:active {
+    color: white;
+}
+
+#user-profile {
+    margin: auto;
+}
+
+.obscure-songs {
+    text-align: center;
+}
+
+.hi {
+    margin-left: 50px;
 }

@@ -15,9 +15,9 @@ var cookieParser = require('cookie-parser');
 const { json } = require('body-parser');
 const { response } = require('express');
 
-var client_id // Your client id
-var client_secret  // Your secret
-var redirect_uri = "http://localhost:8888/callback/"; // Your redirect uri
+var client_id = '2ba45575c2c74ffdae80355e6b83aba2'; // Your client id
+var client_secret = '0a76f68d157548c6a63a2f370441844c'; // Your secret
+var redirect_uri = "http://obscuretunes.herokuapp.com/callback/"; // Your redirect uri
 
 /**
  * Generates a random string containing numbers and letters
@@ -121,111 +121,47 @@ app.get('/callback', function(req, res) {
   }
 });
 
-app.get('/refresh_token', function(req, res) {
-
-  // requesting access token from refresh token
-  var refresh_token = req.query.refresh_token;
-  var authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
-    form: {
-      grant_type: 'refresh_token',
-      refresh_token: refresh_token
-    },
-    json: true
-  };
-
-  request.post(authOptions, function(error, response, body) {
-    if (!error && response.statusCode === 200) {
-      var access_token = body.access_token;
-      res.send({
-        'access_token': access_token
-      });
-    }
-  });
-});
-
 
 app.get('/get_obscure_tunes', function(req, res) {
   var access_token = req.query.access_token;
-  console.log(access_token);
 
   var options = {
-    url: 'https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=5',
+    url: 'https://api.spotify.com/v1/me/top/tracks?time_range=' + req.query.length + '_term&limit=50',
     headers: { 'Authorization': 'Bearer ' + access_token},
     json: true
   };
 
   var returnString = "\n";
+  var numSongs = 0;
+  var numPopularity = 0;
     
   // use the access token to access the Spotify Web API
   request.get(options, function(error, response, body) {
 
     for (var i = 0; i < body.items.length; i++) {
-      if (body.items[i].popularity < 0) {
-        console.log(body.items[i].name);
-        returnString += " " + body.items[i].name + " by " + body.items[i].artists[0].name + "\n";
+      if (body.items[i].popularity < 50) {
+        returnString += body.items[i].name + " by " + body.items[i].artists[0].name + " (popularity: " + body.items[i].popularity + ")" + "\n";
       }
+
+      numPopularity += body.items[i].popularity;
     }
 
     if (returnString === "\n") {
-      returnString = "You had no songs because you're basic";
+      returnString = "\nYou had no songs because you're basic";
     }
 
+    var popularityScore = (body.items.length * 100 - numPopularity) / body.items.length;
+
     res.send({
-      'items': returnString
+      'items': returnString,
+      'popularityScore': popularityScore
     });
   
     
   });
 });
 
-console.log('Listening on 8888');
-app.listen(8888);
 
-function retrieveTracks() {
-  $.ajax({
-    url: `https://api.spotify.com/v1/me/top/tracks`,
-    headers: {
-      Authorization: 'Bearer ' + access_token
-    },
-    success: function (response) {
-      var data = {
-        trackList: response.items,
-        total: 0,
-        date: today.toLocaleDateString('en-US', dateOptions).toUpperCase(),
-        json: true
-      };
-      for (var i = 0; i < data.trackList.length; i++) {
-        data.trackList[i].name = data.trackList[i].name.toUpperCase();
-        console.log(data.trackList[i].name)
-        data.total += data.trackList[i].duration_ms;
-        let minutes = Math.floor(data.trackList[i].duration_ms / 60000);
-        let seconds = ((data.trackList[i].duration_ms % 60000) / 1000).toFixed(0);
-        data.trackList[i].duration_ms = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-        for (var j = 0; j < data.trackList[i].artists.length; j++) {
-          data.trackList[i].artists[j].name = data.trackList[i].artists[j].name.trim();
-          data.trackList[i].artists[j].name = data.trackList[i].artists[j].name.toUpperCase();
-          if (j != data.trackList[i].artists.length - 1) {
-            data.trackList[i].artists[j].name = data.trackList[i].artists[j].name + ', ';
-          }
-        }
-      }
-      minutes = Math.floor(data.total / 60000);
-      seconds = ((data.total % 60000) / 1000).toFixed(0);
-      data.total = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-      userProfilePlaceholder.innerHTML = userProfileTemplate({
-        tracks: data.trackList,
-        total: data.total,
-        time: data.date,
-        num: domNumber,
-        name: displayName,
-        period: domPeriod
-      });
-
-    },
-    error: function(XMLHttpRequest, textStatus, errorThrown) {
-      // error handler here
-    }
-  });
-}
+app.listen(process.env.PORT || 8888, function () {
+	console.log('Server is running on port 8888');
+});
